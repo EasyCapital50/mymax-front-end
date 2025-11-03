@@ -30,12 +30,11 @@ function DataTable({ data, searchTerm, user, apiUrl, token, onDeleteSuccess, onE
   // Show table only:
   // - If superadmin: always show
   // - If staff/user: only show if search has results
-  const shouldShowTable =
-    user.role === 'superadmin' ||
-    (searchTerm.trim().length > 0 && filteredData.length > 0);
+const shouldShowTable =
+  user.role === 'superadmin' ||
+  (filteredData.length > 0 || data.length > 0);
 
-  if (!shouldShowTable) return null;
-
+if (!shouldShowTable) return null;
 
 
   const canEdit = (row) =>
