@@ -20,73 +20,81 @@ function Dashboard({ onLogout }) {
   const [data, setData] = useState([]);
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // ✅ Added for date filtering
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState({ records: true, users: true });
   const [error, setError] = useState({ records: null, users: null });
 
-  // ✅ Fetch records with backend pagination
-const fetchRecords = async (page = 1) => {
-  try {
-    setLoading((prev) => ({ ...prev, records: true }));
-    setError((prev) => ({ ...prev, records: null }));
+  // ✅ Updated to include searchTerm, fromDate, and toDate
+  const fetchRecords = async (page = 1) => {
+    try {
+      setLoading((prev) => ({ ...prev, records: true }));
+      setError((prev) => ({ ...prev, records: null }));
 
-    const response = await fetch(`${API_URL}/records/get?page=${page}&limit=10`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        'Content-Type': 'application/json',
-      },
-    });
+      const params = new URLSearchParams({
+        page,
+        limit: 10,
+      });
 
-    const json = await response.json();
-    console.log('🔍 Records API response for', user.role, ':', json);
+      if (searchTerm) params.append('search', searchTerm);
+      if (fromDate) params.append('fromDate', fromDate);
+      if (toDate) params.append('toDate', toDate);
 
-    if (!response.ok) {
-      throw new Error(
-        response.status === 401
-          ? 'Session expired. Please login again.'
-          : json.message || 'Failed to fetch records'
-      );
+      const response = await fetch(`${API_URL}/records/get?${params.toString()}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const json = await response.json();
+      console.log('🔍 Records API response for', user.role, ':', json);
+
+      if (!response.ok) {
+        throw new Error(
+          response.status === 401
+            ? 'Session expired. Please login again.'
+            : json.message || 'Failed to fetch records'
+        );
+      }
+
+      let records = [];
+      if (Array.isArray(json)) {
+        records = json;
+      } else if (Array.isArray(json.records)) {
+        records = json.records;
+      } else if (Array.isArray(json.data)) {
+        records = json.data;
+      } else if (json && typeof json === 'object') {
+        const firstArray = Object.values(json).find((v) => Array.isArray(v));
+        if (firstArray) records = firstArray;
+      }
+
+      setData(records || []);
+      setCurrentPage(json.page || 1);
+      setTotalPages(json.totalPages || 1);
+
+      if (!records || records.length === 0) {
+        setError((prev) => ({
+          ...prev,
+          records: 'No records found.',
+        }));
+      }
+    } catch (err) {
+      console.error('❌ Records fetch error:', err);
+      setError((prev) => ({ ...prev, records: err.message }));
+      if (err.message.includes('401') || err.message.includes('expired')) {
+        handleForceLogout();
+      }
+    } finally {
+      setLoading((prev) => ({ ...prev, records: false }));
     }
-
-    // ✅ Detect the right property
-    let records = [];
-    if (Array.isArray(json)) {
-      records = json;
-    } else if (Array.isArray(json.records)) {
-      records = json.records;
-    } else if (Array.isArray(json.data)) {
-      records = json.data;
-    } else if (json && typeof json === 'object') {
-      // Sometimes staff API wraps it differently
-      const firstArray = Object.values(json).find((v) => Array.isArray(v));
-      if (firstArray) records = firstArray;
-    }
-
-    // ✅ Assign safely
-    setData(records || []);
-    setCurrentPage(json.page || 1);
-    setTotalPages(json.totalPages || 1);
-
-    // ✅ If staff gets empty records
-    if (!records || records.length === 0) {
-      setError((prev) => ({
-        ...prev,
-        records: 'No records found for your account.',
-      }));
-    }
-  } catch (err) {
-    console.error('❌ Records fetch error:', err);
-    setError((prev) => ({ ...prev, records: err.message }));
-    if (err.message.includes('401') || err.message.includes('expired')) {
-      handleForceLogout();
-    }
-  } finally {
-    setLoading((prev) => ({ ...prev, records: false }));
-  }
-};
-
-
+  };
 
   const fetchUsers = async () => {
     try {
@@ -149,6 +157,16 @@ const fetchRecords = async (page = 1) => {
     }
   };
 
+  // ✅ Auto fetch when typing search or changing date
+  useEffect(() => {
+    if (user) {
+      const delay = setTimeout(() => {
+        fetchRecords(1);
+      }, 500);
+      return () => clearTimeout(delay);
+    }
+  }, [searchTerm, fromDate, toDate]);
+
   useEffect(() => {
     if (user) {
       fetchRecords(1);
@@ -184,86 +202,89 @@ const fetchRecords = async (page = 1) => {
           </div>
         )}
 
-        {/* Search bar */}
-{/* Search bar */}
-<SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        {/* ✅ Search + Date filter bar */}
+        <SearchBar
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          fromDate={fromDate}
+          toDate={toDate}
+          setFromDate={setFromDate}
+          setToDate={setToDate}
+          user={user}
+        />
 
-{/* Records table */}
-{loading.records ? (
-  <div className="text-center py-8 text-gray-600">Loading records...</div>
-) : error.records ? (
-  <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
-    {error.records}
-  </div>
-) : data.length === 0 ? (
-  <div className="text-center py-8 text-gray-500">
-    No records found for your account.
-  </div>
-) : (
-  <>
-    <DataTable
-      data={data}
-      searchTerm={searchTerm}
-      user={user}
-      apiUrl={`${API_URL}/records`}
-      token={user.token}
-      onDeleteSuccess={refreshData}
-      onEditSuccess={refreshData}
-    />
+        {/* Records table */}
+        {loading.records ? (
+          <div className="text-center py-8 text-gray-600">Loading records...</div>
+        ) : error.records ? (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+            {error.records}
+          </div>
+        ) : data.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            No records found for your account.
+          </div>
+        ) : (
+          <>
+            <DataTable
+              data={data}
+              searchTerm={searchTerm}
+              user={user}
+              apiUrl={`${API_URL}/records`}
+              token={user.token}
+              onDeleteSuccess={refreshData}
+              onEditSuccess={refreshData}
+            />
 
-    {/* Pagination Controls */}
-    {totalPages > 1 && (
-      <div className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-8">
-        <div className="flex items-center gap-2 bg-white shadow-sm rounded-xl px-4 py-2 border border-gray-200">
-          <button
-            onClick={() => fetchRecords(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 
-              hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            ← Prev
-          </button>
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-8">
+                <div className="flex items-center gap-2 bg-white shadow-sm rounded-xl px-4 py-2 border border-gray-200">
+                  <button
+                    onClick={() => fetchRecords(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 
+                    hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    ← Prev
+                  </button>
 
-          <span className="text-gray-700 font-semibold text-sm">
-            Page <span className="text-green-700">{currentPage}</span> of{' '}
-            <span className="text-green-700">{totalPages}</span>
-          </span>
+                  <span className="text-gray-700 font-semibold text-sm">
+                    Page <span className="text-green-700">{currentPage}</span> of{' '}
+                    <span className="text-green-700">{totalPages}</span>
+                  </span>
 
-          <button
-            onClick={() => fetchRecords(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 
-              hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Next →
-          </button>
-        </div>
+                  <button
+                    onClick={() => fetchRecords(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 
+                    hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next →
+                  </button>
+                </div>
 
-        {/* Jump to Page Selector */}
-        <div className="flex items-center gap-2 text-sm">
-          <label htmlFor="pageSelect" className="text-gray-600">
-            Go to:
-          </label>
-          <select
-            id="pageSelect"
-            value={currentPage}
-            onChange={(e) => fetchRecords(Number(e.target.value))}
-            className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            {Array.from({ length: totalPages }, (_, i) => (
-              <option key={i + 1} value={i + 1}>
-                {i + 1}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-    )}
-  </>
-)}
+                <div className="flex items-center gap-2 text-sm">
+                  <label htmlFor="pageSelect" className="text-gray-600">
+                    Go to:
+                  </label>
+                  <select
+                    id="pageSelect"
+                    value={currentPage}
+                    onChange={(e) => fetchRecords(Number(e.target.value))}
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    {Array.from({ length: totalPages }, (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+          </>
+        )}
 
-
-        {/* Add Entry Form */}
         {(user.role === 'staff' || user.role === 'superadmin') && (
           <AddEntryForm
             dataHeaders={
@@ -295,7 +316,6 @@ const fetchRecords = async (page = 1) => {
           />
         )}
 
-        {/* Superadmin: Manage Users */}
         {user.role === 'superadmin' && (
           <>
             {error.users && (
