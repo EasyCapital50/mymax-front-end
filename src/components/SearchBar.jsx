@@ -32,7 +32,7 @@ function SearchBar({ searchTerm, setSearchTerm, fromDate, toDate, setFromDate, s
         {searchTerm && (
           <button
             onClick={() => setSearchTerm('')}
-            className="bg-gray-300 hover:bg-gray-400 text-sm px-3 py-2 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-sm px-3 py-2 rounded"
           >
             Clear
           </button>
@@ -65,7 +65,7 @@ function SearchBar({ searchTerm, setSearchTerm, fromDate, toDate, setFromDate, s
               setFromDate('');
               setToDate('');
             }}
-            className="bg-green-300 hover:bg-green-400 text-sm px-3 py-1 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-sm px-3 py-1 rounded"
           >
             Clear
           </button>
