@@ -98,31 +98,32 @@ function DataTable({ data, searchTerm, user, apiUrl, token, onDeleteSuccess, onE
   };
 
   return (
-    <div className="overflow-x-auto shadow rounded mb-8">
+  <div className="shadow rounded mb-8">
+    {/* Desktop Table */}
+    <div className="hidden md:block overflow-x-auto">
       <table className="min-w-full text-sm border border-gray-300">
         <thead className="bg-green-600 text-white">
           <tr>
             {data[0] &&
-Object.keys(labelMap)
-                .filter(key => !excludedFields.includes(key) && key !== 'createdBy')
+              Object.keys(labelMap)
+                .filter((key) => !excludedFields.includes(key) && key !== 'createdBy')
                 .map((key, i) => (
-                  <th key={i} className="px-4 py-2 border">
+                  <th key={i} className="px-4 py-2 border text-left whitespace-nowrap">
                     {labelMap[key] || key}
                   </th>
                 ))}
             {user.role === 'superadmin' && (
-              <th className="px-4 py-2 border">Created By</th>
+              <th className="px-4 py-2 border text-left whitespace-nowrap">Created By</th>
             )}
-
             {(user.role === 'superadmin' || user.role === 'staff') && (
-              <th className="px-4 py-2 border">Actions</th>
+              <th className="px-4 py-2 border text-left whitespace-nowrap">Actions</th>
             )}
           </tr>
         </thead>
 
         <tbody>
           {filteredData.map((row, i) => (
-            <tr key={i} className="even:bg-gray-100">
+            <tr key={i} className="even:bg-gray-100 hover:bg-gray-50 transition-colors">
               {Object.keys(labelMap).map((key, j) => (
                 <td key={j} className="px-3 py-2 border">
                   {editingRow === row._id ? (
@@ -131,24 +132,20 @@ Object.keys(labelMap)
                       name={key}
                       value={editValues[key] || ''}
                       onChange={handleEditChange}
-                      className="border px-2 py-1 rounded w-full"
+                      className="border px-2 py-1 rounded w-full text-sm"
                     />
                   ) : (
-                    row[key] || '—'  // fallback for missing values
+                    row[key] || '—'
                   )}
                 </td>
-              ))
-              }
+              ))}
 
-              {/* Show Created By */}
               {user.role === 'superadmin' && (
                 <td className="px-3 py-2 border text-gray-500">
-                  {row.createdBy?.username || "—"}
+                  {row.createdBy?.username || '—'}
                 </td>
               )}
 
-
-              {/* Actions */}
               {(user.role === 'superadmin' || user.role === 'staff') && (
                 <td className="px-3 py-2 border space-x-2">
                   {editingRow === row._id ? (
@@ -168,14 +165,12 @@ Object.keys(labelMap)
                     </>
                   ) : (
                     <>
-                      {(user.role === 'superadmin' || user.role === 'staff') && (
-  <button
-    onClick={() => handleEditRow(row)}
-    className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded"
-  >
-    Edit
-  </button>
-)}
+                      <button
+                        onClick={() => handleEditRow(row)}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded"
+                      >
+                        Edit
+                      </button>
 
                       {user.role === 'superadmin' && (
                         <button
@@ -189,13 +184,86 @@ Object.keys(labelMap)
                   )}
                 </td>
               )}
-
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  );
+
+    {/* Mobile Card Layout */}
+    <div className="md:hidden flex flex-col gap-4">
+      {filteredData.map((row, i) => (
+        <div
+          key={i}
+          className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col gap-2"
+        >
+          {Object.keys(labelMap).map(
+            (key, j) =>
+              row[key] && (
+                <div key={j} className="flex justify-between items-start">
+                  <span className="font-medium text-gray-600 text-sm">
+                    {labelMap[key]}:
+                  </span>
+                  <span className="text-gray-800 text-sm text-right max-w-[60%]">
+                    {row[key]}
+                  </span>
+                </div>
+              )
+          )}
+
+          {user.role === 'superadmin' && (
+            <div className="flex justify-between items-start">
+              <span className="font-medium text-gray-600 text-sm">Created By:</span>
+              <span className="text-gray-800 text-sm">
+                {row.createdBy?.username || '—'}
+              </span>
+            </div>
+          )}
+
+          {/* Mobile Actions */}
+          {(user.role === 'superadmin' || user.role === 'staff') && (
+            <div className="flex justify-end gap-2 pt-2">
+              {editingRow === row._id ? (
+                <>
+                  <button
+                    onClick={() => handleSaveEdit(row._id)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    className="bg-gray-500 hover:bg-gray-600 text-white text-xs px-3 py-1 rounded"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => handleEditRow(row)}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded"
+                  >
+                    Edit
+                  </button>
+                  {user.role === 'superadmin' && (
+                    <button
+                      onClick={() => handleDeleteRow(row._id)}
+                      className="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 }
 
 export default DataTable;

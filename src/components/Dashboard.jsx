@@ -20,6 +20,9 @@ function Dashboard({ onLogout }) {
     const [data, setData] = useState([]);
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
     const [loading, setLoading] = useState({ records: true, users: true });
     const [error, setError] = useState({ records: null, users: null });
 
@@ -133,8 +136,19 @@ function Dashboard({ onLogout }) {
             alert(err.message);
         }
     };
+    // Reset to page 1 whenever data or search term changes
+useEffect(() => {
+  setCurrentPage(1);
+}, [searchTerm, data]);
+
 
     if (!user) return null;
+// Calculate which items to show
+const startIndex = (currentPage - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const paginatedData = data.slice(startIndex, endIndex);
+
+
 
     return (
         <div className="w-full min-h-screen bg-gray-50 p-4 md:p-6 lg:p-10 overflow-x-hidden">
@@ -160,20 +174,73 @@ function Dashboard({ onLogout }) {
                 <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
                 {loading.records ? (
-                    <div className="text-center py-8 text-gray-600">Loading records...</div>
+                <div className="text-center py-8 text-gray-600">Loading records...</div>
                 ) : (
+                <>
                     <DataTable
-                        data={data}
-                        searchTerm={searchTerm}
-                        user={user}
-                        apiUrl={`${API_URL}/records`}
-                        token={user.token}
-                        onDeleteSuccess={refreshData}
-                        onEditSuccess={refreshData}
+                    data={paginatedData}
+                    searchTerm={searchTerm}
+                    user={user}
+                    apiUrl={`${API_URL}/records`}
+                    token={user.token}
+                    onDeleteSuccess={refreshData}
+                    onEditSuccess={refreshData}
                     />
 
+                    {/* Pagination Controls */}
+                    {data.length > itemsPerPage && (
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-8">
+                        <div className="flex items-center gap-2 bg-white shadow-sm rounded-xl px-4 py-2 border border-gray-200">
+                        <button
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                            className="px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 
+                                    hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            ← Prev
+                        </button>
 
+                        <span className="text-gray-700 font-semibold text-sm">
+                            Page <span className="text-green-700">{currentPage}</span> of{" "}
+                            <span className="text-green-700">{Math.ceil(data.length / itemsPerPage)}</span>
+                        </span>
+
+                        <button
+                            onClick={() =>
+                            setCurrentPage((prev) =>
+                                prev < Math.ceil(data.length / itemsPerPage) ? prev + 1 : prev
+                            )
+                            }
+                            disabled={currentPage === Math.ceil(data.length / itemsPerPage)}
+                            className="px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 
+                                    hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Next →
+                        </button>
+                        </div>
+
+                        {/* Optional: Jump to Page Selector */}
+                        <div className="flex items-center gap-2 text-sm">
+                        <label htmlFor="pageSelect" className="text-gray-600">Go to:</label>
+                        <select
+                            id="pageSelect"
+                            value={currentPage}
+                            onChange={(e) => setCurrentPage(Number(e.target.value))}
+                            className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            {Array.from({ length: Math.ceil(data.length / itemsPerPage) }, (_, i) => (
+                            <option key={i + 1} value={i + 1}>
+                                {i + 1}
+                            </option>
+                            ))}
+                        </select>
+                        </div>
+                    </div>
+                    )}
+
+                </>
                 )}
+
 
                 {(user.role === 'staff' || user.role === 'superadmin') && (
                     <AddEntryForm
