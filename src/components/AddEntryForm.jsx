@@ -22,9 +22,15 @@ function AddEntryForm({ dataHeaders, apiUrl, token, onSuccess }) {
         "to", "appDate", "status", "remarks", "natureOfBsns", "styleOfBsns"
     ];
 
-    const combinedFields = Array.from(
-        new Set([...dataHeaders, ...requiredFields])
-    ).filter(field => !['_id', '__v', 'createdAt', 'updatedAt', 'createdBy'].includes(field));
+    const combinedFields = [
+    ...requiredFields,
+    ...dataHeaders.filter(
+        (field) =>
+        !requiredFields.includes(field) &&
+        !['_id', '__v', 'createdAt', 'updatedAt', 'createdBy'].includes(field)
+    ),
+    ];
+
 
     const handleChange = (e) => {
         setNewEntry({ ...newEntry, [e.target.name]: e.target.value });
