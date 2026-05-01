@@ -27,7 +27,7 @@ const MainAdminDashboard = () => {
   const [user, setUser] = useState(null);
 
   const token = localStorage.getItem("sessionToken");
-const API_URL = 'https://api.easycapitalsolution.com';
+const API_URL = 'https://api.mymaxkapital.com';
 
   // Check if user is authenticated
   useEffect(() => {

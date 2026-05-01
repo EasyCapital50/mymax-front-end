@@ -9,13 +9,13 @@ const CompanyListPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const API_URL = 'https://api.easycapitalsolution.com';
+  const API_URL = 'https://api.mymaxkapital.com';
 
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("https://api.easycapitalsolution.com/companies/list", {
+        const res = await axios.get("https://api.mymaxkapital.com/companies/list", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

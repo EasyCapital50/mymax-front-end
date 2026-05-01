@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = 'https://api.easycapitalsolution.com/users/login';
+const API_URL = 'https://api.mymaxkapital.com/users/login';
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
