@@ -39,7 +39,7 @@ const CompanyListPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500 mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
           <p className="text-gray-600">Loading companies...</p>
         </div>
       </div>
@@ -58,7 +58,7 @@ const CompanyListPage = () => {
           <p className="text-center text-gray-700">{error}</p>
           <button 
             onClick={() => window.location.reload()}
-            className="mt-6 w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="mt-6 w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             Try Again
           </button>
@@ -91,7 +91,7 @@ const CompanyListPage = () => {
                 placeholder="Search companies..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -114,15 +114,15 @@ const CompanyListPage = () => {
               <div
                 key={company._id}
                 onClick={() => navigate("/login")}
-                className="cursor-pointer group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-green-100"
+                className="cursor-pointer group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-100"
               >
                 <div className="p-6">
                   <div className="flex items-center mb-5">
-                    <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">
+                    <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md">
                       {company.name.charAt(0)}
                     </div>
                     <div className="ml-4">
-                      <h2 className="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
+                      <h2 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                         {company.name}
                       </h2>
                       <p className="text-sm text-gray-500">
@@ -132,10 +132,10 @@ const CompanyListPage = () => {
                   </div>
                   
                   <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">
-                    <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                    <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
                       Active
                     </span>
-                    <button className="text-sm text-gray-500 hover:text-green-600 transition-colors flex items-center">
+                    <button className="text-sm text-gray-500 hover:text-blue-600 transition-colors flex items-center">
                       View details
                       <svg className="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />

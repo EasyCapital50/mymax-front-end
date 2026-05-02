@@ -228,9 +228,9 @@ const API_URL = 'https://api.mymaxkapital.com';
             </div>
           )}
           {success && (
-            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-4 flex justify-between items-center">
+            <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg mb-4 flex justify-between items-center">
               <p>{success}</p>
-              <button onClick={() => setSuccess("")} className="text-green-700">
+              <button onClick={() => setSuccess("")} className="text-blue-700">
                 <FiX />
               </button>
             </div>
@@ -250,8 +250,8 @@ const API_URL = 'https://api.mymaxkapital.com';
           </div>
           
           <div className="bg-white rounded-xl shadow-md p-6 flex items-center">
-            <div className="bg-green-100 p-3 rounded-lg mr-4">
-              <FiUser className="text-green-600 text-xl" />
+            <div className="bg-blue-100 p-3 rounded-lg mr-4">
+              <FiUser className="text-blue-600 text-xl" />
             </div>
             <div>
               <h3 className="text-sm text-gray-500">Active Users</h3>
@@ -402,7 +402,7 @@ const API_URL = 'https://api.mymaxkapital.com';
                       <div className="flex space-x-2">
                         <button
                           onClick={() => handleUpdate(company._id)}
-                          className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center"
+                          className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center"
                         >
                           <FiSave className="mr-1" />
                           Save

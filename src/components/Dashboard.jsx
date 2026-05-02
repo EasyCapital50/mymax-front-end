@@ -179,8 +179,8 @@ function Dashboard({ onLogout }) {
   if (!user) return null;
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 p-4 md:p-6 lg:p-10 overflow-x-hidden">
-      <div className="max-w-7xl mx-auto flex flex-col gap-6">
+    <div className="w-full min-h-screen bg-gray-100 p-2 md:p-4 overflow-x-hidden">
+      <div className="w-full flex flex-col gap-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
@@ -249,8 +249,8 @@ function Dashboard({ onLogout }) {
                   </button>
 
                   <span className="text-gray-700 font-semibold text-sm">
-                    Page <span className="text-green-700">{currentPage}</span> of{' '}
-                    <span className="text-green-700">{totalPages}</span>
+                    Page <span className="text-blue-700">{currentPage}</span> of{' '}
+                    <span className="text-blue-700">{totalPages}</span>
                   </span>
 
                   <button
@@ -271,7 +271,7 @@ function Dashboard({ onLogout }) {
                     id="pageSelect"
                     value={currentPage}
                     onChange={(e) => fetchRecords(Number(e.target.value))}
-                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     {Array.from({ length: totalPages }, (_, i) => (
                       <option key={i + 1} value={i + 1}>
@@ -290,25 +290,25 @@ function Dashboard({ onLogout }) {
             dataHeaders={
               data[0]
                 ? Array.from(
-                    new Set([
-                      ...Object.keys(data[0]),
-                      'natureOfBsns',
-                      'styleOfBsns',
-                    ])
-                  )
-                : [
-                    'companyName',
-                    'customerName',
-                    'mobile',
-                    'place',
-                    'bank',
-                    'to',
-                    'appDate',
-                    'status',
-                    'remarks',
+                  new Set([
+                    ...Object.keys(data[0]),
                     'natureOfBsns',
                     'styleOfBsns',
-                  ]
+                  ])
+                )
+                : [
+                  'companyName',
+                  'customerName',
+                  'mobile',
+                  'place',
+                  'bank',
+                  'to',
+                  'appDate',
+                  'status',
+                  'remarks',
+                  'natureOfBsns',
+                  'styleOfBsns',
+                ]
             }
             apiUrl={API_URL}
             token={user.token}

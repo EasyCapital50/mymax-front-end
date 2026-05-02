@@ -1,17 +1,45 @@
 import React, { useState } from 'react';
 
 const labelMap = {
-  companyName: "Company Name",
-  customerName: "Customer Name",
-  mobile: "Mobile",
-  place: "Place",
-  bank: "Bank",
-  to: "T/o",
-  appDate: "App Date",
-  status: "Status",
-  remarks: "Remarks",
-  natureOfBsns: "Nature of Bsns",   // ✅ Add this
-  styleOfBsns: "Style of Bsns",     // ✅ Add this
+  applicationNumber: "APPLICATION NUMBER",
+  name: "NAME",
+  mobile1: "MOBILE 1",
+  mobile2: "MOBILE 2",
+  mobile3: "MOBILE 3",
+  landMark: "LAND MARK",
+  residenceAddress: "RESIDENCE ADDRESS",
+  officeAddress: "OFFICE ADDRESS",
+  bankName: "BANK NAME",
+  accountNo: "ACCOUNT NO",
+  gstNo: "GST NO",
+  noOfCv: "NO OF CV",
+  noOfCars: "NO OF CARS",
+  landArea: "LAND AREA",
+  building: "BUILDING",
+  businessNature: "BUSINESS NATURE",
+  turnOver: "TURN OVER (LAST 12 MONTH)",
+  creditPeriod: "CREDIT PERIOD",
+  cibil: "CIBIL",
+  ccLimit: "CC LIMIT",
+  mainAccounts: "MAIN ACCOUNTS",
+  businessRef1: "BUSINESS REFERENCE 1",
+  businessRef2: "BUSINESS REFERENCE 2",
+  spouseName: "SPOUSE NAME",
+  chequeRtnCcAc: "CHEQUE RTN CC A/C",
+  chequeRtnCurrentAc: "CHEQUE RTN CURRENT A/C",
+  chequeRtnSbAc: "CHEQUE RTN SB A/C",
+  propertySyNo: "PROPERTY SY NO",
+  propertyTitleDeedNo: "PROPERTY TITLE DEED NO",
+  propertyArea: "PROPERTY AREA",
+  buildingArea: "BUILDING AREA",
+  emiClearingAccount: "EMI CLEARING ACCOUNT",
+  securityCheque: "SECURITY CHEQUE",
+  purposeOfLoans: "PURPOSE OF LOANS",
+  docCollected: "DOC COLLECTED",
+  pendings: "PENDINGS",
+  negative: "NEGATIVE",
+  pdComments: "PD COMMENTS",
+  remarks: "REMARKS",
 };
 
 
@@ -97,11 +125,11 @@ if (!shouldShowTable) return null;
   };
 
   return (
-  <div className="shadow rounded mb-8">
+  <div className="bg-white shadow-md rounded-xl p-4 md:p-6 mb-8 border border-gray-200">
     {/* Desktop Table */}
     <div className="hidden md:block overflow-x-auto">
       <table className="min-w-full text-sm border border-gray-300">
-        <thead className="bg-green-600 text-white">
+        <thead className="bg-blue-600 text-white">
           <tr>
             {data[0] &&
               Object.keys(labelMap)
@@ -124,7 +152,7 @@ if (!shouldShowTable) return null;
           {filteredData.map((row, i) => (
             <tr key={i} className="even:bg-gray-100 hover:bg-gray-50 transition-colors">
               {Object.keys(labelMap).map((key, j) => (
-                <td key={j} className="px-3 py-2 border">
+                <td key={j} className="px-3 py-2 border whitespace-nowrap">
                   {editingRow === row._id ? (
                     <input
                       type="text"
@@ -140,13 +168,13 @@ if (!shouldShowTable) return null;
               ))}
 
               {user.role === 'superadmin' && (
-                <td className="px-3 py-2 border text-gray-500">
+                <td className="px-3 py-2 border text-gray-500 whitespace-nowrap">
                   {row.createdBy?.username || '—'}
                 </td>
               )}
 
               {(user.role === 'superadmin' || user.role === 'staff') && (
-                <td className="px-3 py-2 border space-x-2">
+                <td className="px-3 py-2 border space-x-2 whitespace-nowrap">
                   {editingRow === row._id ? (
                     <>
                       <button
