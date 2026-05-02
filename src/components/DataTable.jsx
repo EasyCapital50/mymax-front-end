@@ -131,6 +131,7 @@ if (!shouldShowTable) return null;
       <table className="min-w-full text-sm border border-gray-300">
         <thead className="bg-blue-600 text-white">
           <tr>
+            <th className="px-4 py-2 border text-left whitespace-nowrap">#</th>
             {data[0] &&
               Object.keys(labelMap)
                 .filter((key) => !excludedFields.includes(key) && key !== 'createdBy')
@@ -151,6 +152,7 @@ if (!shouldShowTable) return null;
         <tbody>
           {filteredData.map((row, i) => (
             <tr key={i} className="even:bg-gray-100 hover:bg-gray-50 transition-colors">
+              <td className="px-3 py-2 border whitespace-nowrap font-semibold text-gray-700 text-center">{i + 1}</td>
               {Object.keys(labelMap).map((key, j) => (
                 <td key={j} className="px-3 py-2 border whitespace-nowrap">
                   {editingRow === row._id ? (
@@ -224,6 +226,11 @@ if (!shouldShowTable) return null;
           key={i}
           className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col gap-2"
         >
+          <div className="flex justify-between items-start border-b pb-2 mb-1">
+            <span className="font-bold text-gray-800 text-sm">
+              #{i + 1}
+            </span>
+          </div>
           {Object.keys(labelMap).map(
             (key, j) =>
               row[key] && (
