@@ -19,6 +19,7 @@ const FIELDS = [
   { name: 'landArea', label: 'LAND AREA' },
   { name: 'building', label: 'BUILDING' },
   { name: 'businessNature', label: 'BUSINESS NATURE' },
+  { name: 'typeOfBusiness', label: 'TYPE OF BUSINESS' },
   { name: 'turnOver', label: 'TURN OVER (LAST 12 MONTH)' },
   { name: 'creditPeriod', label: 'CREDIT PERIOD' },
   { name: 'cibil', label: 'CIBIL' },
@@ -48,7 +49,6 @@ const FIELDS = [
   { name: 'disbDate', label: 'DISB DATE' },
   { name: 'emiStartDate', label: 'EMI START DATE' },
   { name: 'emiEndDate', label: 'EMI END DATE' },
-  { name: 'typeOfBusiness', label: 'TYPE OF BUSINESS' },
 ];
 
 function AddEntryForm({ apiUrl, token, onSuccess }) {

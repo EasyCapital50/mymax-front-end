@@ -19,6 +19,7 @@ const labelMap = {
   landArea: "LAND AREA",
   building: "BUILDING",
   businessNature: "BUSINESS NATURE",
+  typeOfBusiness: "TYPE OF BUSINESS",
   turnOver: "TURN OVER (LAST 12 MONTH)",
   creditPeriod: "CREDIT PERIOD",
   cibil: "CIBIL",
@@ -48,7 +49,6 @@ const labelMap = {
   disbDate: "DISB DATE",
   emiStartDate: "EMI START DATE",
   emiEndDate: "EMI END DATE",
-  typeOfBusiness: "TYPE OF BUSINESS",
 };
 
 
