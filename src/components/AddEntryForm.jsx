@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 const FIELDS = [
   { name: 'applicationNumber', label: 'APPLICATION NUMBER' },
-  { name: 'name', label: 'NAME' },
-  { name: 'dirPartners', label: 'DIR/PARTNERS' },
-  { name: 'dirPartnersName', label: 'DIR/PARTNERS NAME' },
+  { name: 'name', label: 'CUSTOMER NAME' },
+  { name: 'dirPartners', label: 'DIRECTOR 1' },
+  { name: 'dirPartnersName', label: 'DIRECTOR 2' },
   { name: 'mobile1', label: 'MOBILE 1' },
   { name: 'mobile2', label: 'MOBILE 2' },
   { name: 'mobile3', label: 'MOBILE 3' },

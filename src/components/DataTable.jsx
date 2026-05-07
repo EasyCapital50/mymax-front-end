@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 
 const labelMap = {
   applicationNumber: "APPLICATION NUMBER",
-  name: "NAME",
-  dirPartners: "DIR/PARTNERS",
-  dirPartnersName: "DIR/PARTNERS NAME",
+  name: "CUSTOMER NAME",
+  dirPartners: "DIRECTOR 1",
+  dirPartnersName: "DIRECTOR 2",
   mobile1: "MOBILE 1",
   mobile2: "MOBILE 2",
   mobile3: "MOBILE 3",
