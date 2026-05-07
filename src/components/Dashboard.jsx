@@ -299,6 +299,8 @@ function Dashboard({ onLogout }) {
                 : [
                   'companyName',
                   'customerName',
+                  'dirPartners',
+                  'dirPartnersName',
                   'mobile',
                   'place',
                   'bank',
@@ -306,6 +308,13 @@ function Dashboard({ onLogout }) {
                   'appDate',
                   'status',
                   'remarks',
+                  'loanAmt',
+                  'tenure',
+                  'emi',
+                  'disbDate',
+                  'emiStartDate',
+                  'emiEndDate',
+                  'typeOfBusiness',
                   'natureOfBsns',
                   'styleOfBsns',
                 ]

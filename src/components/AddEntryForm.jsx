@@ -3,6 +3,8 @@ import { useState } from 'react';
 const FIELDS = [
   { name: 'applicationNumber', label: 'APPLICATION NUMBER' },
   { name: 'name', label: 'NAME' },
+  { name: 'dirPartners', label: 'DIR/PARTNERS' },
+  { name: 'dirPartnersName', label: 'DIR/PARTNERS NAME' },
   { name: 'mobile1', label: 'MOBILE 1' },
   { name: 'mobile2', label: 'MOBILE 2' },
   { name: 'mobile3', label: 'MOBILE 3' },
@@ -40,6 +42,13 @@ const FIELDS = [
   { name: 'negative', label: 'NEGATIVE' },
   { name: 'pdComments', label: 'PD COMMENTS' },
   { name: 'remarks', label: 'REMARKS' },
+  { name: 'loanAmt', label: 'LOAN AMT' },
+  { name: 'tenure', label: 'TENURE' },
+  { name: 'emi', label: 'EMI' },
+  { name: 'disbDate', label: 'DISB DATE' },
+  { name: 'emiStartDate', label: 'EMI START DATE' },
+  { name: 'emiEndDate', label: 'EMI END DATE' },
+  { name: 'typeOfBusiness', label: 'TYPE OF BUSINESS' },
 ];
 
 function AddEntryForm({ apiUrl, token, onSuccess }) {

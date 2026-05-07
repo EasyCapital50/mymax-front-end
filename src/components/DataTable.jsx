@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 const labelMap = {
   applicationNumber: "APPLICATION NUMBER",
   name: "NAME",
+  dirPartners: "DIR/PARTNERS",
+  dirPartnersName: "DIR/PARTNERS NAME",
   mobile1: "MOBILE 1",
   mobile2: "MOBILE 2",
   mobile3: "MOBILE 3",
@@ -40,6 +42,13 @@ const labelMap = {
   negative: "NEGATIVE",
   pdComments: "PD COMMENTS",
   remarks: "REMARKS",
+  loanAmt: "LOAN AMT",
+  tenure: "TENURE",
+  emi: "EMI",
+  disbDate: "DISB DATE",
+  emiStartDate: "EMI START DATE",
+  emiEndDate: "EMI END DATE",
+  typeOfBusiness: "TYPE OF BUSINESS",
 };
 
 
