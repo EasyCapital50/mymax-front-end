@@ -40,7 +40,7 @@ const FIELDS = [
   { name: 'purposeOfLoans', label: 'PURPOSE OF LOANS' },
   { name: 'docCollected', label: 'DOC COLLECTED' },
   { name: 'pendings', label: 'PENDINGS' },
-  { name: 'negative', label: 'NEGATIVE' },
+  { name: 'negative', label: 'STATUS' },
   { name: 'pdComments', label: 'PD COMMENTS' },
   { name: 'remarks', label: 'REMARKS' },
   { name: 'loanAmt', label: 'LOAN AMT' },

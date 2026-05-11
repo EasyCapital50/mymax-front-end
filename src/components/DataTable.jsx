@@ -40,7 +40,7 @@ const labelMap = {
   purposeOfLoans: "PURPOSE OF LOANS",
   docCollected: "DOC COLLECTED",
   pendings: "PENDINGS",
-  negative: "NEGATIVE",
+  negative: "STATUS",
   pdComments: "PD COMMENTS",
   remarks: "REMARKS",
   loanAmt: "LOAN AMT",
