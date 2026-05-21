@@ -5,7 +5,8 @@ function UserForm({ apiUrl, token, onSuccess }) {
         name: '',
         username: '',
         password: '',
-        role: 'user'
+        role: 'user',
+        companyName: localStorage.getItem('selectedCompany') || 'mymaxkapital'
     });
 
     const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +37,8 @@ function UserForm({ apiUrl, token, onSuccess }) {
                         name: '',
                         username: '',
                         password: '',
-                        role: 'user'
+                        role: 'user',
+                        companyName: localStorage.getItem('selectedCompany') || 'mymaxkapital'
                     });
                 }
             })
@@ -87,6 +89,21 @@ function UserForm({ apiUrl, token, onSuccess }) {
                     <option value="user">User</option>
                     <option value="staff">Staff</option>
                     <option value="superadmin">Super Admin</option>
+                </select>
+                <select
+                    name="companyName"
+                    value={newUser.companyName}
+                    onChange={handleChange}
+                    className="border rounded px-3 py-2 text-sm flex-1"
+                    disabled={localStorage.getItem('selectedCompany') && localStorage.getItem('selectedCompany') !== 'mymaxkapital'}
+                >
+                    <option value="mymaxkapital">MyMaxKapital (Main)</option>
+                    <option value="Chequedetails">Chequedetails</option>
+                    <option value="Offficeexp">Office Expenses</option>
+                    <option value="partnersloansdeposit">Partners Loans/Deposit</option>
+                    <option value="Agency details">Agency Details</option>
+                    <option value="disbursedcustomers">Disbursed Customers</option>
+                    <option value="Pendin emi">Pending EMI</option>
                 </select>
             </div>
             <button

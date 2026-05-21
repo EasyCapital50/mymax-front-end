@@ -32,15 +32,26 @@ function Login({ onLogin }) {
       }
 
       if (data.token) {
+        const selectedCompany = localStorage.getItem('selectedCompany') || 'mymaxkapital';
+        
+        // Strict Check: Ensure the user belongs to the company they are trying to log into
+        const userCompany = data.user.companyName || 'mymaxkapital';
+        
+        // Let mainadmin bypass if they are logging into mymaxkapital, 
+        // but block them from other sections if you strictly want separation.
+        if (userCompany !== selectedCompany) {
+          throw new Error(`Access Denied: This account belongs to ${userCompany}, but you are trying to log into ${selectedCompany}.`);
+        }
+
         localStorage.setItem('sessionToken', data.token);
         localStorage.setItem('username', data.user.name);
         localStorage.setItem('role', data.user.role);
         onLogin(data.user.name, data.user.role, data.token);
-if (data.user.role === "mainadmin") {
-    navigate('/main-admin');
-  } else {
-    navigate('/dashboard');
-  }
+        if (data.user.role === "mainadmin") {
+          navigate('/main-admin');
+        } else {
+          navigate('/dashboard');
+        }
       }
     } catch (err) {
       console.error("Login error:", err);

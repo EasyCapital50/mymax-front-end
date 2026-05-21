@@ -365,7 +365,7 @@ function Dashboard({ onLogout }) {
               </div>
             ) : (
               <UserTable
-                users={users}
+                users={users.filter(u => (u.companyName || 'mymaxkapital') === (localStorage.getItem('selectedCompany') || 'mymaxkapital'))}
                 setUsers={setUsers}
                 apiUrl={API_URL}
                 token={user.token}
