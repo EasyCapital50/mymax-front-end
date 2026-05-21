@@ -52,8 +52,19 @@ if (data.user.role === "mainadmin") {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-sm">
-        <h2 className="text-center text-2xl font-bold mb-6 text-gray-800">Login</h2>
+      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-sm relative">
+        <button 
+          onClick={() => navigate('/companies')} 
+          className="flex items-center gap-2 mb-6 px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all border border-gray-200 shadow-sm"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Companies
+        </button>
+        <h2 className="text-center text-2xl font-bold mb-6 text-gray-800">
+          {localStorage.getItem('selectedCompany') || 'mymaxkapital'} Login
+        </h2>
         
         {error && (
           <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">

@@ -44,6 +44,9 @@ function Dashboard({ onLogout }) {
       if (searchTerm) params.append('search', searchTerm);
       if (fromDate) params.append('fromDate', fromDate);
       if (toDate) params.append('toDate', toDate);
+      
+      const selectedCompany = localStorage.getItem('selectedCompany');
+      if (selectedCompany) params.append('companyName', selectedCompany);
 
       const response = await fetch(`${API_URL}/records/get?${params.toString()}`, {
         headers: {
@@ -73,6 +76,13 @@ function Dashboard({ onLogout }) {
       } else if (json && typeof json === 'object') {
         const firstArray = Object.values(json).find((v) => Array.isArray(v));
         if (firstArray) records = firstArray;
+      }
+
+      if (selectedCompany) {
+        records = records.filter((r) => {
+          const rCompany = r.companyName || 'mymaxkapital';
+          return rCompany === selectedCompany;
+        });
       }
 
       setData(records || []);
@@ -129,7 +139,9 @@ function Dashboard({ onLogout }) {
   const refreshData = () => fetchRecords(currentPage);
 
   const handleForceLogout = () => {
+    const company = localStorage.getItem('selectedCompany');
     localStorage.clear();
+    if (company) localStorage.setItem('selectedCompany', company);
     onLogout();
     navigate('/login');
   };
@@ -148,7 +160,9 @@ function Dashboard({ onLogout }) {
 
       if (!response.ok) throw new Error(json.message || 'Logout failed');
 
+      const company = localStorage.getItem('selectedCompany');
       localStorage.clear();
+      if (company) localStorage.setItem('selectedCompany', company);
       onLogout();
       navigate('/login');
     } catch (err) {
@@ -183,10 +197,15 @@ function Dashboard({ onLogout }) {
       <div className="w-full flex flex-col gap-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-            Welcome, {user.username}{' '}
-            <span className="text-gray-500 text-lg">({user.role})</span>
-          </h2>
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+              Welcome, {user.username}{' '}
+              <span className="text-gray-500 text-lg">({user.role})</span>
+            </h2>
+            <p className="text-blue-600 font-medium mt-1 text-sm md:text-base">
+              Managing Section: <span className="uppercase tracking-wide font-bold">{localStorage.getItem('selectedCompany') || 'mymaxkapital'}</span>
+            </p>
+          </div>
           <button
             onClick={handleLogout}
             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors w-full sm:w-auto"

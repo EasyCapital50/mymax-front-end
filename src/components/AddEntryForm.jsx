@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const FIELDS = [
+const defaultFields = [
   { name: 'applicationNumber', label: 'APPLICATION NUMBER' },
   { name: 'name', label: 'CUSTOMER NAME' },
   { name: 'dirPartners', label: 'DIRECTOR 1' },
@@ -51,8 +51,74 @@ const FIELDS = [
   { name: 'emiEndDate', label: 'EMI END DATE' },
 ];
 
+const chequeDetailsFields = [
+  { name: 'dated', label: 'DATED' },
+  { name: 'chequeNo', label: 'CHEQUE NO' },
+  { name: 'bank', label: 'BANK' },
+  { name: 'payee', label: 'PAYEE' },
+  { name: 'amt', label: 'AMT' },
+  { name: 'remarks', label: 'REMARKS' }
+];
+
+const officeExpFields = [
+  { name: 'date', label: 'DATE' },
+  { name: 'particular', label: 'PARTICULAR' },
+  { name: 'amt', label: 'AMT' },
+  { name: 'remarks', label: 'REMARKS' }
+];
+
+const partnersLoansDepositFields = [
+  { name: 'date', label: 'DATE' },
+  { name: 'partnerName', label: 'NAME OF PARTNER' },
+  { name: 'depositAmt', label: 'DEPOSIT AMT' },
+  { name: 'remarks', label: 'REMARKS' }
+];
+
+const agencyDetailsFields = [
+  { name: 'dsaName', label: 'DSA NAME' },
+  { name: 'contactPerson', label: 'CONTACT PERSON' },
+  { name: 'mob', label: 'MOB' },
+  { name: 'place', label: 'PLACE' },
+  { name: 'email', label: 'EMAIL' },
+  { name: 'bankDetails', label: 'BANK DETAILS' }
+];
+
+const disbursedCustomersFields = [
+  { name: 'loanNo', label: 'LOAN NO' },
+  { name: 'customerName', label: 'CUSTOMER NAME' },
+  { name: 'contactPerson', label: 'CONTACT PERSON' },
+  { name: 'mob', label: 'MOB' },
+  { name: 'date', label: 'DATE' },
+  { name: 'loanAmt', label: 'LOAN AMT' },
+  { name: 'disbAmt', label: 'DISB AMT' }
+];
+
+const pendingEmiFields = [
+  { name: 'loanNo', label: 'LOAN NO' },
+  { name: 'customerName', label: 'CUSTOMER NAME' },
+  { name: 'mob', label: 'MOB' },
+  { name: 'contactName', label: 'NAME OF CONTACT' },
+  { name: 'loanAmt', label: 'LOAN AMT' },
+  { name: 'emi', label: 'EMI' },
+  { name: 'pendingEmiAmt', label: 'PENDING EMI AMT' },
+  { name: 'pendingTenure', label: 'PENDING TENURE' },
+  { name: 'balance', label: 'BALANCE' }
+];
+
+function getFields(company) {
+  if (company === 'Chequedetails') return chequeDetailsFields;
+  if (company === 'Offficeexp') return officeExpFields;
+  if (company === 'partnersloansdeposit') return partnersLoansDepositFields;
+  if (company === 'Agency details') return agencyDetailsFields;
+  if (company === 'disbursedcustomers') return disbursedCustomersFields;
+  if (company === 'Pendin emi') return pendingEmiFields;
+  return defaultFields;
+}
+
 function AddEntryForm({ apiUrl, token, onSuccess }) {
   const [newEntry, setNewEntry] = useState({});
+  const selectedCompany = localStorage.getItem('selectedCompany') || 'mymaxkapital';
+  const currentFields = getFields(selectedCompany);
 
   const handleChange = (e) => {
     setNewEntry({ ...newEntry, [e.target.name]: e.target.value });
@@ -60,13 +126,16 @@ function AddEntryForm({ apiUrl, token, onSuccess }) {
 
   const handleAddContent = async () => {
     try {
+      const selectedCompany = localStorage.getItem('selectedCompany') || 'mymaxkapital';
+      const entryToSave = { ...newEntry, companyName: selectedCompany };
+
       const res = await fetch(`${apiUrl}/records/post`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(newEntry),
+        body: JSON.stringify(entryToSave),
       });
 
       if (!res.ok) {
@@ -93,7 +162,7 @@ function AddEntryForm({ apiUrl, token, onSuccess }) {
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {FIELDS.map(({ name, label }) => (
+        {currentFields.map(({ name, label }) => (
           <div key={name} className="flex flex-col gap-1">
             <label
               htmlFor={`field-${name}`}

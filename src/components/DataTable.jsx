@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const labelMap = {
+const defaultLabelMap = {
   applicationNumber: "APPLICATION NUMBER",
   name: "CUSTOMER NAME",
   dirPartners: "DIRECTOR 1",
@@ -51,12 +51,78 @@ const labelMap = {
   emiEndDate: "EMI END DATE",
 };
 
+const chequeDetailsLabelMap = {
+  dated: "DATED",
+  chequeNo: "CHEQUE NO",
+  bank: "BANK",
+  payee: "PAYEE",
+  amt: "AMT",
+  remarks: "REMARKS"
+};
+
+const officeExpLabelMap = {
+  date: "DATE",
+  particular: "PARTICULAR",
+  amt: "AMT",
+  remarks: "REMARKS"
+};
+
+const partnersLoansDepositLabelMap = {
+  date: "DATE",
+  partnerName: "NAME OF PARTNER",
+  depositAmt: "DEPOSIT AMT",
+  remarks: "REMARKS"
+};
+
+const agencyDetailsLabelMap = {
+  dsaName: "DSA NAME",
+  contactPerson: "CONTACT PERSON",
+  mob: "MOB",
+  place: "PLACE",
+  email: "EMAIL",
+  bankDetails: "BANK DETAILS"
+};
+
+const disbursedCustomersLabelMap = {
+  loanNo: "LOAN NO",
+  customerName: "CUSTOMER NAME",
+  contactPerson: "CONTACT PERSON",
+  mob: "MOB",
+  date: "DATE",
+  loanAmt: "LOAN AMT",
+  disbAmt: "DISB AMT"
+};
+
+const pendingEmiLabelMap = {
+  loanNo: "LOAN NO",
+  customerName: "CUSTOMER NAME",
+  mob: "MOB",
+  contactName: "NAME OF CONTACT",
+  loanAmt: "LOAN AMT",
+  emi: "EMI",
+  pendingEmiAmt: "PENDING EMI AMT",
+  pendingTenure: "PENDING TENURE",
+  balance: "BALANCE"
+};
+
+function getLabelMap(company) {
+  if (company === 'Chequedetails') return chequeDetailsLabelMap;
+  if (company === 'Offficeexp') return officeExpLabelMap;
+  if (company === 'partnersloansdeposit') return partnersLoansDepositLabelMap;
+  if (company === 'Agency details') return agencyDetailsLabelMap;
+  if (company === 'disbursedcustomers') return disbursedCustomersLabelMap;
+  if (company === 'Pendin emi') return pendingEmiLabelMap;
+  return defaultLabelMap;
+}
 
 function DataTable({ data, searchTerm, user, apiUrl, token, onDeleteSuccess, onEditSuccess }) {
   const excludedFields = ['_id', '__v', 'createdAt', 'updatedAt'];
 
   const [editingRow, setEditingRow] = useState(null);
   const [editValues, setEditValues] = useState({});
+  
+  const selectedCompany = localStorage.getItem('selectedCompany') || 'mymaxkapital';
+  const currentLabelMap = getLabelMap(selectedCompany);
 
   const filteredData = data.filter(row =>
     Object.values(row).some(val =>
@@ -142,11 +208,11 @@ if (!shouldShowTable) return null;
           <tr>
             <th className="px-4 py-2 border text-left whitespace-nowrap">#</th>
             {data[0] &&
-              Object.keys(labelMap)
+              Object.keys(currentLabelMap)
                 .filter((key) => !excludedFields.includes(key) && key !== 'createdBy')
                 .map((key, i) => (
                   <th key={i} className="px-4 py-2 border text-left whitespace-nowrap">
-                    {labelMap[key] || key}
+                    {currentLabelMap[key] || key}
                   </th>
                 ))}
             {user.role === 'superadmin' && (
@@ -162,7 +228,7 @@ if (!shouldShowTable) return null;
           {filteredData.map((row, i) => (
             <tr key={i} className="even:bg-gray-100 hover:bg-gray-50 transition-colors">
               <td className="px-3 py-2 border whitespace-nowrap font-semibold text-gray-700 text-center">{i + 1}</td>
-              {Object.keys(labelMap).map((key, j) => (
+              {Object.keys(currentLabelMap).map((key, j) => (
                 <td key={j} className="px-3 py-2 border whitespace-nowrap">
                   {editingRow === row._id ? (
                     <input
@@ -240,12 +306,12 @@ if (!shouldShowTable) return null;
               #{i + 1}
             </span>
           </div>
-          {Object.keys(labelMap).map(
+          {Object.keys(currentLabelMap).map(
             (key, j) =>
               row[key] && (
                 <div key={j} className="flex justify-between items-start">
                   <span className="font-medium text-gray-600 text-sm">
-                    {labelMap[key]}:
+                    {currentLabelMap[key]}:
                   </span>
                   <span className="text-gray-800 text-sm text-right max-w-[60%]">
                     {row[key]}

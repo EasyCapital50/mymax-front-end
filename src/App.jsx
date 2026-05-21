@@ -32,7 +32,9 @@ function App() {
   const handleLogout = () => {
     setUser(null);
     setRedirectPath(null);
+    const company = localStorage.getItem('selectedCompany');
     localStorage.clear();
+    if (company) localStorage.setItem('selectedCompany', company);
   };
 
   // Clear redirect path after navigation

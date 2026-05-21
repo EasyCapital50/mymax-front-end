@@ -20,7 +20,17 @@ const CompanyListPage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setCompanies(res.data);
+        
+        const additionalCompanies = [
+          { _id: 'local-1', name: 'Chequedetails', createdAt: new Date().toISOString() },
+          { _id: 'local-2', name: 'Offficeexp', createdAt: new Date().toISOString() },
+          { _id: 'local-3', name: 'partnersloansdeposit', createdAt: new Date().toISOString() },
+          { _id: 'local-4', name: 'Agency details', createdAt: new Date().toISOString() },
+          { _id: 'local-5', name: 'disbursedcustomers', createdAt: new Date().toISOString() },
+          { _id: 'local-6', name: 'Pendin emi', createdAt: new Date().toISOString() }
+        ];
+        
+        setCompanies([...res.data, ...additionalCompanies]);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch companies");
       } finally {
@@ -113,7 +123,10 @@ const CompanyListPage = () => {
             {filteredCompanies.map((company) => (
               <div
                 key={company._id}
-                onClick={() => navigate("/login")}
+                onClick={() => {
+                  localStorage.setItem("selectedCompany", company.name);
+                  navigate("/login");
+                }}
                 className="cursor-pointer group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-100"
               >
                 <div className="p-6">
