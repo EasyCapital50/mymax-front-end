@@ -7,9 +7,8 @@ function UserTable({ users = [], setUsers, apiUrl, token, onUserUpdate }) {
     const [visiblePasswords, setVisiblePasswords] = useState({}); // {userId: true/false}
 
     const handleChange = (index, field, value) => {
-        const updated = [...users];
-        updated[index] = { ...updated[index], [field]: value };
-        setUsers(updated);
+        const targetUser = users[index];
+        setUsers(prevUsers => prevUsers.map(u => u._id === targetUser._id ? { ...u, [field]: value } : u));
     };
 
     const togglePasswordVisibility = (userId) => {

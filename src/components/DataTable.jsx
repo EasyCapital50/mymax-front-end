@@ -269,12 +269,14 @@ if (!shouldShowTable) return null;
                     </>
                   ) : (
                     <>
-                      <button
-                        onClick={() => handleEditRow(row)}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded"
-                      >
-                        Edit
-                      </button>
+                      {canEdit(row) && (
+                        <button
+                          onClick={() => handleEditRow(row)}
+                          className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded"
+                        >
+                          Edit
+                        </button>
+                      )}
 
                       {user.role === 'superadmin' && (
                         <button
@@ -349,12 +351,14 @@ if (!shouldShowTable) return null;
                 </>
               ) : (
                 <>
-                  <button
-                    onClick={() => handleEditRow(row)}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
+                  {canEdit(row) && (
+                    <button
+                      onClick={() => handleEditRow(row)}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded"
+                    >
+                      Edit
+                    </button>
+                  )}
                   {user.role === 'superadmin' && (
                     <button
                       onClick={() => handleDeleteRow(row._id)}

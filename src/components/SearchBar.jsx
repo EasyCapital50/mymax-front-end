@@ -1,5 +1,4 @@
-function SearchBar({ searchTerm, setSearchTerm, fromDate, toDate, setFromDate, setToDate, user }) {
-  const showHint = user?.role === 'user' || user?.role === 'staff';
+function SearchBar({ searchTerm, setSearchTerm, fromDate, toDate, setFromDate, setToDate }) {
 
   return (
     <div className="mb-4 flex md:flex-row flex-col items-center gap-8">

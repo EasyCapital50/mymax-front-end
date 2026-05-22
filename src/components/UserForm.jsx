@@ -24,23 +24,25 @@ function UserForm({ apiUrl, token, onSuccess }) {
             },
             body: JSON.stringify(newUser)
         })
-            .then(res => res.json())
-            .then(res => {
-                if (res.message) {
-                    alert(res.message);
-                } else {
-                    alert('User added!');
-                    if (typeof onSuccess === 'function') {
-                        onSuccess(); // <-- call fetchUsers or any callback
-                    }
-                    setNewUser({
-                        name: '',
-                        username: '',
-                        password: '',
-                        role: 'user',
-                        companyName: localStorage.getItem('selectedCompany') || 'mymaxkapital'
-                    });
+            .then(async (res) => {
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.message || 'Failed to add user');
                 }
+                return data;
+            })
+            .then(() => {
+                alert('User added!');
+                if (typeof onSuccess === 'function') {
+                    onSuccess();
+                }
+                setNewUser({
+                    name: '',
+                    username: '',
+                    password: '',
+                    role: 'user',
+                    companyName: localStorage.getItem('selectedCompany') || 'mymaxkapital'
+                });
             })
             .catch(err => alert('Error adding user: ' + err.message));
     };
@@ -98,7 +100,7 @@ function UserForm({ apiUrl, token, onSuccess }) {
                     disabled={localStorage.getItem('selectedCompany') && localStorage.getItem('selectedCompany') !== 'mymaxkapital'}
                 >
                     <option value="mymaxkapital">MyMaxKapital (Main)</option>
-                    <option value="Chequedetails">Chequedetails</option>
+                    <option value="Chequedetails">Cheque Details</option>
                     <option value="Offficeexp">Office Expenses</option>
                     <option value="partnersloansdeposit">Partners Loans/Deposit</option>
                     <option value="Agency details">Agency Details</option>

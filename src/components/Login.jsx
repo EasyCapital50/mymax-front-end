@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getCompanyDisplayName } from '../utils/companyHelper';
 
 const API_URL = 'https://api.mymaxkapital.com/users/login';
 
@@ -74,7 +75,7 @@ function Login({ onLogin }) {
           Back to Companies
         </button>
         <h2 className="text-center text-2xl font-bold mb-6 text-gray-800">
-          {localStorage.getItem('selectedCompany') || 'mymaxkapital'} Login
+          {getCompanyDisplayName(localStorage.getItem('selectedCompany') || 'mymaxkapital')} Login
         </h2>
         
         {error && (

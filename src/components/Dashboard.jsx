@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getCompanyDisplayName } from '../utils/companyHelper';
 import SearchBar from './SearchBar';
 import DataTable from './DataTable';
 import AddEntryForm from './AddEntryForm';
@@ -10,7 +12,7 @@ const API_URL = 'https://api.mymaxkapital.com';
 
 function Dashboard({ onLogout }) {
   const navigate = useNavigate();
-  const [user, setUser] = useState(() => {
+  const [user] = useState(() => {
     const token = localStorage.getItem('sessionToken');
     const username = localStorage.getItem('username');
     const role = localStorage.getItem('role');
@@ -29,6 +31,7 @@ function Dashboard({ onLogout }) {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState({ records: true, users: true });
   const [error, setError] = useState({ records: null, users: null });
+  const isFirstRender = React.useRef(true);
 
   // ✅ Updated to include searchTerm, fromDate, and toDate
   const fetchRecords = async (page = 1) => {
@@ -174,6 +177,10 @@ function Dashboard({ onLogout }) {
   // ✅ Auto fetch when typing search or changing date
   useEffect(() => {
     if (user) {
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return;
+      }
       const delay = setTimeout(() => {
         fetchRecords(1);
       }, 500);
@@ -203,7 +210,7 @@ function Dashboard({ onLogout }) {
               <span className="text-gray-500 text-lg">({user.role})</span>
             </h2>
             <p className="text-blue-600 font-medium mt-1 text-sm md:text-base">
-              Managing Section: <span className="uppercase tracking-wide font-bold">{localStorage.getItem('selectedCompany') || 'mymaxkapital'}</span>
+              Managing Section: <span className="uppercase tracking-wide font-bold">{getCompanyDisplayName(localStorage.getItem('selectedCompany') || 'mymaxkapital')}</span>
             </p>
           </div>
           <button
