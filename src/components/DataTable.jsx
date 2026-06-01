@@ -142,7 +142,11 @@ if (!shouldShowTable) return null;
 
   const canEdit = (row) =>
     user.role === 'superadmin' || 
-    (user.role === 'staff' && row.createdBy?.username === user.username);
+    (user.role === 'staff' && 
+      (row.createdBy?._id === user.id || 
+       row.createdBy === user.id ||
+       row.createdBy?.username === user.loginName ||
+       row.createdBy?.name === user.username));
 
   const handleDeleteRow = async (id) => {
     if (!window.confirm(`Are you sure you want to delete this record?`)) return;

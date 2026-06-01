@@ -14,9 +14,11 @@ function Dashboard({ onLogout }) {
   const navigate = useNavigate();
   const [user] = useState(() => {
     const token = localStorage.getItem('sessionToken');
+    const id = localStorage.getItem('userId');
+    const loginName = localStorage.getItem('userLoginName');
     const username = localStorage.getItem('username');
     const role = localStorage.getItem('role');
-    return token && username && role ? { token, username, role } : null;
+    return token && username && role ? { token, id, loginName, username, role } : null;
   });
 
   const [data, setData] = useState([]);

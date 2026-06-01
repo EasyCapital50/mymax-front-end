@@ -9,6 +9,8 @@ function App() {
   const [user, setUser] = useState(() => {
     const token = localStorage.getItem('sessionToken');
     return token ? {
+      id: localStorage.getItem('userId'),
+      loginName: localStorage.getItem('userLoginName'),
       name: localStorage.getItem('username'),
       role: localStorage.getItem('role'),
       token: token
@@ -18,7 +20,13 @@ function App() {
   const [redirectPath, setRedirectPath] = useState(null);
 
   const handleLogin = (username, role, token) => {
-    const userData = { name: username, role, token };
+    const userData = {
+      id: localStorage.getItem('userId'),
+      loginName: localStorage.getItem('userLoginName'),
+      name: username,
+      role,
+      token
+    };
     setUser(userData);
     
     // Set redirect path based on role

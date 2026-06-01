@@ -46,6 +46,8 @@ function Login({ onLogin }) {
         }
 
         localStorage.setItem('sessionToken', data.token);
+        localStorage.setItem('userId', data.user._id || data.user.id || '');
+        localStorage.setItem('userLoginName', data.user.username || '');
         localStorage.setItem('username', data.user.name);
         localStorage.setItem('role', data.user.role);
         onLogin(data.user.name, data.user.role, data.token);
