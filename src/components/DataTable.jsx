@@ -141,7 +141,8 @@ if (!shouldShowTable) return null;
 
 
   const canEdit = (row) =>
-    user.role === 'superadmin' || (user.role === 'staff' && row.createdBy?._id === user._id);
+    user.role === 'superadmin' || 
+    (user.role === 'staff' && row.createdBy?.username === user.username);
 
   const handleDeleteRow = async (id) => {
     if (!window.confirm(`Are you sure you want to delete this record?`)) return;
@@ -156,11 +157,14 @@ if (!shouldShowTable) return null;
       });
 
       const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result.message || result.error || 'Failed to delete record');
+      }
       alert(result.message || "✅ Record deleted.");
       onDeleteSuccess?.();
     } catch (err) {
       console.error("❌ Delete failed:", err);
-      alert("Delete failed. Please try again.");
+      alert(err.message || "Delete failed. Please try again.");
     }
   };
 
@@ -175,22 +179,28 @@ if (!shouldShowTable) return null;
 
   const handleSaveEdit = async (id) => {
     try {
+      // Remove mongoose / system fields that might trigger schema validation or immutable errors
+      const { _id, __v, createdAt: _createdAt, updatedAt: _updatedAt, createdBy: _createdBy, ...updatePayload } = editValues;
+
       const res = await fetch(`${apiUrl}/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(editValues),
+        body: JSON.stringify(updatePayload),
       });
 
       const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result.message || result.error || 'Failed to update record');
+      }
       alert(result.message || "✅ Record updated.");
       setEditingRow(null);
       onEditSuccess?.();
     } catch (err) {
       console.error("❌ Update failed:", err);
-      alert("Update failed. Try again.");
+      alert(err.message || "Update failed. Try again.");
     }
   };
 
@@ -308,19 +318,31 @@ if (!shouldShowTable) return null;
               #{i + 1}
             </span>
           </div>
-          {Object.keys(currentLabelMap).map(
-            (key, j) =>
-              row[key] && (
-                <div key={j} className="flex justify-between items-start">
-                  <span className="font-medium text-gray-600 text-sm">
-                    {currentLabelMap[key]}:
+          {Object.keys(currentLabelMap).map((key, j) => {
+            const hasValueOrEditing = editingRow === row._id || row[key];
+            if (!hasValueOrEditing) return null;
+
+            return (
+              <div key={j} className="flex flex-col gap-1 border-b border-gray-50 pb-1 last:border-0">
+                <span className="font-medium text-gray-400 text-[10px] uppercase tracking-wider">
+                  {currentLabelMap[key]}
+                </span>
+                {editingRow === row._id ? (
+                  <input
+                    type="text"
+                    name={key}
+                    value={editValues[key] || ''}
+                    onChange={handleEditChange}
+                    className="border border-gray-300 rounded px-2 py-1 w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
+                  />
+                ) : (
+                  <span className="text-gray-800 text-sm font-medium">
+                    {row[key] || '—'}
                   </span>
-                  <span className="text-gray-800 text-sm text-right max-w-[60%]">
-                    {row[key]}
-                  </span>
-                </div>
-              )
-          )}
+                )}
+              </div>
+            );
+          })}
 
           {user.role === 'superadmin' && (
             <div className="flex justify-between items-start">
