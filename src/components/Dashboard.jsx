@@ -41,17 +41,15 @@ function Dashboard({ onLogout }) {
       setLoading((prev) => ({ ...prev, records: true }));
       setError((prev) => ({ ...prev, records: null }));
 
-      const params = new URLSearchParams({
-        page,
-        limit: 10,
-      });
+      const params = new URLSearchParams();
 
-      if (searchTerm) params.append('search', searchTerm);
+      params.append('page', page);
+      params.append('limit', 50);
+
       if (fromDate) params.append('fromDate', fromDate);
       if (toDate) params.append('toDate', toDate);
       
       const selectedCompany = localStorage.getItem('selectedCompany');
-      if (selectedCompany) params.append('companyName', selectedCompany);
 
       const response = await fetch(`${API_URL}/records/get?${params.toString()}`, {
         headers: {
@@ -84,22 +82,16 @@ function Dashboard({ onLogout }) {
       }
 
       if (selectedCompany) {
+        const normalizedCompany = selectedCompany.trim().toLowerCase();
         records = records.filter((r) => {
-          const rCompany = r.companyName || 'mymaxkapital';
-          return rCompany === selectedCompany;
+          const rCompany = (r.companyName || 'mymaxkapital').trim().toLowerCase();
+          return rCompany === normalizedCompany;
         });
       }
 
       setData(records || []);
       setCurrentPage(json.page || 1);
       setTotalPages(json.totalPages || 1);
-
-      if (!records || records.length === 0) {
-        setError((prev) => ({
-          ...prev,
-          records: 'No records found.',
-        }));
-      }
     } catch (err) {
       console.error('❌ Records fetch error:', err);
       setError((prev) => ({ ...prev, records: err.message }));

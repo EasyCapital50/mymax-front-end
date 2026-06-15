@@ -24,7 +24,7 @@ function SearchBar({ searchTerm, setSearchTerm, fromDate, toDate, setFromDate, s
           type="text"
           placeholder="Search to view your data..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="border px-3 py-2 pl-10 pr-10 rounded w-full"
         />
 

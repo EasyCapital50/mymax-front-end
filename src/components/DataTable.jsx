@@ -130,15 +130,6 @@ function DataTable({ data, searchTerm, user, apiUrl, token, onDeleteSuccess, onE
     )
   );
 
-  // Show table only:
-  // - If superadmin: always show
-  // - If staff/user: only show if search has results
-const shouldShowTable =
-  user.role === 'superadmin' ||
-  (filteredData.length > 0 || data.length > 0);
-
-if (!shouldShowTable) return null;
-
 
   const canEdit = (row) =>
     user.role === 'superadmin' || 
@@ -239,7 +230,26 @@ if (!shouldShowTable) return null;
         </thead>
 
         <tbody>
-          {filteredData.map((row, i) => (
+          {filteredData.length === 0 ? (
+            <tr>
+              <td
+                colSpan={
+                  Object.keys(currentLabelMap).filter(
+                    (k) => !excludedFields.includes(k) && k !== 'createdBy'
+                  ).length +
+                  1 +
+                  (user.role === 'superadmin' ? 1 : 0) +
+                  (user.role === 'superadmin' || user.role === 'staff' ? 1 : 0)
+                }
+                className="px-4 py-8 text-center text-gray-500"
+              >
+                {searchTerm
+                  ? `No records match "${searchTerm}"`
+                  : 'No records found.'}
+              </td>
+            </tr>
+          ) : (
+            filteredData.map((row, i) => (
             <tr key={i} className="even:bg-gray-100 hover:bg-gray-50 transition-colors">
               <td className="px-3 py-2 border whitespace-nowrap font-semibold text-gray-700 text-center">{i + 1}</td>
               {Object.keys(currentLabelMap).map((key, j) => (
@@ -305,14 +315,21 @@ if (!shouldShowTable) return null;
                 </td>
               )}
             </tr>
-          ))}
+          )))}
         </tbody>
       </table>
     </div>
 
     {/* Mobile Card Layout */}
     <div className="md:hidden flex flex-col gap-4">
-      {filteredData.map((row, i) => (
+      {filteredData.length === 0 ? (
+        <div className="text-center py-8 text-gray-500">
+          {searchTerm
+            ? `No records match "${searchTerm}"`
+            : 'No records found.'}
+        </div>
+      ) : (
+        filteredData.map((row, i) => (
         <div
           key={i}
           className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 flex flex-col gap-2"
@@ -398,7 +415,7 @@ if (!shouldShowTable) return null;
             </div>
           )}
         </div>
-      ))}
+      )))}
     </div>
   </div>
 );
