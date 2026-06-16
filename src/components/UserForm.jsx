@@ -49,7 +49,12 @@ function UserForm({ apiUrl, token, onSuccess }) {
                     companyName: localStorage.getItem('selectedCompany') || 'mymaxkapital'
                 });
             })
-            .catch(err => alert('Error adding user: ' + err.message));
+            .catch(err => {
+                const msg = err.message === 'Failed to fetch'
+                  ? 'Network error — check your connection and try again.'
+                  : err.message;
+                alert('Error adding user: ' + msg);
+            });
     };
 
     return (

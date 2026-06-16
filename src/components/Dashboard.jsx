@@ -41,6 +41,9 @@ function Dashboard({ onLogout }) {
       setLoading((prev) => ({ ...prev, records: true }));
       setError((prev) => ({ ...prev, records: null }));
 
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+
       const params = new URLSearchParams();
 
       params.append('page', page);
@@ -53,11 +56,13 @@ function Dashboard({ onLogout }) {
       if (selectedCompany) params.append('companyName', selectedCompany);
 
       const response = await fetch(`${API_URL}/records/get?${params.toString()}`, {
+        signal: controller.signal,
         headers: {
           Authorization: `Bearer ${user.token}`,
           'Content-Type': 'application/json',
         },
       });
+      clearTimeout(timeout);
 
       const json = await response.json();
       console.log('🔍 Records API response for', user.role, ':', json);
@@ -95,7 +100,10 @@ function Dashboard({ onLogout }) {
       setTotalPages(json.totalPages || 1);
     } catch (err) {
       console.error('❌ Records fetch error:', err);
-      setError((prev) => ({ ...prev, records: err.message }));
+      const msg = err.name === 'AbortError' ? 'Request timed out. Please try again.' :
+                  err.message === 'Failed to fetch' ? 'Network error — check your connection and try again.' :
+                  err.message;
+      setError((prev) => ({ ...prev, records: msg }));
       if (err.message.includes('401') || err.message.includes('expired')) {
         handleForceLogout();
       }
@@ -106,12 +114,17 @@ function Dashboard({ onLogout }) {
 
   const fetchUsers = async () => {
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+
       const response = await fetch(`${API_URL}/users/get`, {
+        signal: controller.signal,
         headers: {
           Authorization: `Bearer ${user.token}`,
           'Content-Type': 'application/json',
         },
       });
+      clearTimeout(timeout);
 
       if (!response.ok) {
         throw new Error(
@@ -125,7 +138,10 @@ function Dashboard({ onLogout }) {
       setUsers(Array.isArray(json) ? json : []);
     } catch (err) {
       console.error('Users fetch error:', err);
-      setError((prev) => ({ ...prev, users: err.message }));
+      const msg = err.name === 'AbortError' ? 'Request timed out. Please try again.' :
+                  err.message === 'Failed to fetch' ? 'Network error — check your connection and try again.' :
+                  err.message;
+      setError((prev) => ({ ...prev, users: msg }));
       if (err.message.includes('401') || err.message.includes('expired')) {
         handleForceLogout();
       }

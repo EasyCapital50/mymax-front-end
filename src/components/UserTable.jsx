@@ -60,7 +60,10 @@ function UserTable({ users = [], setUsers, apiUrl, token, onUserUpdate }) {
         }
     } catch (err) {
         console.error("Update error:", err);
-        setError(err.message);
+        const msg = err.message === 'Failed to fetch'
+          ? 'Network error — check your connection and try again.'
+          : err.message;
+        setError(msg);
     } finally {
         setLoading(false);
     }
@@ -89,7 +92,10 @@ function UserTable({ users = [], setUsers, apiUrl, token, onUserUpdate }) {
             onUserUpdate(); // refresh user list
         } catch (err) {
             console.error("Delete error:", err);
-            setError(err.message);
+            const msg = err.message === 'Failed to fetch'
+              ? 'Network error — check your connection and try again.'
+              : err.message;
+            setError(msg);
         } finally {
             setLoading(false);
         }

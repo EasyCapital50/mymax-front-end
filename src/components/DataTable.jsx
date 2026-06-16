@@ -159,7 +159,10 @@ function DataTable({ data, searchTerm, user, apiUrl, token, onDeleteSuccess, onE
       onDeleteSuccess?.();
     } catch (err) {
       console.error("❌ Delete failed:", err);
-      alert(err.message || "Delete failed. Please try again.");
+      const msg = err.message === 'Failed to fetch'
+        ? 'Network error — check your connection and try again.'
+        : (err.message || "Delete failed. Please try again.");
+      alert(msg);
     }
   };
 
@@ -195,7 +198,10 @@ function DataTable({ data, searchTerm, user, apiUrl, token, onDeleteSuccess, onE
       onEditSuccess?.();
     } catch (err) {
       console.error("❌ Update failed:", err);
-      alert(err.message || "Update failed. Try again.");
+      const msg = err.message === 'Failed to fetch'
+        ? 'Network error — check your connection and try again.'
+        : (err.message || "Update failed. Try again.");
+      alert(msg);
     }
   };
 
