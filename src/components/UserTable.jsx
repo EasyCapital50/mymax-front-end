@@ -30,6 +30,15 @@ function UserTable({ users = [], setUsers, apiUrl, token, onUserUpdate }) {
     setLoading(true);
     setError(null);
 
+    const updateBody = {
+        username: user.username.trim(),
+        role: user.role,
+        companyName: localStorage.getItem('selectedCompany') || 'mymaxkapital',
+    };
+    if (user.password && user.password.trim()) {
+        updateBody.password = user.password.trim();
+    }
+
     try {
         const response = await fetch(`${apiUrl}/users/edit/${user._id}`, {
             method: 'PUT',
@@ -37,11 +46,7 @@ function UserTable({ users = [], setUsers, apiUrl, token, onUserUpdate }) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify({
-                username: user.username,
-                password: user.password || undefined,
-                role: user.role,
-            }),
+            body: JSON.stringify(updateBody),
         });
 
         if (!response.ok) {

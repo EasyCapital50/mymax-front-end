@@ -24,7 +24,7 @@ function Login({ onLogin }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username: username.trim(), password: password.trim() })
       });
 
       const data = await response.json();
@@ -36,13 +36,12 @@ function Login({ onLogin }) {
       if (data.token) {
         const selectedCompany = localStorage.getItem('selectedCompany') || 'mymaxkapital';
         
-        // Strict Check: Ensure the user belongs to the company they are trying to log into
-        const userCompany = data.user.companyName || 'mymaxkapital';
-        
-        // Let mainadmin bypass if they are logging into mymaxkapital, 
-        // but block them from other sections if you strictly want separation.
-        if (userCompany !== selectedCompany) {
-          throw new Error(`Access Denied: This account belongs to ${userCompany}, but you are trying to log into ${selectedCompany}.`);
+        // Only validate company if API returns a companyName for the user
+        if (data.user?.companyName) {
+          const userCompany = data.user.companyName;
+          if (userCompany.toLowerCase() !== selectedCompany.toLowerCase()) {
+            throw new Error(`Access Denied: This account belongs to "${userCompany}", but you are trying to log into "${selectedCompany}".`);
+          }
         }
 
         localStorage.setItem('sessionToken', data.token);

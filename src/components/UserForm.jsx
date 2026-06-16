@@ -16,13 +16,18 @@ function UserForm({ apiUrl, token, onSuccess }) {
     };
 
     const handleAddUser = () => {
+        const userData = {
+            ...newUser,
+            username: newUser.username.trim(),
+            password: newUser.password.trim(),
+        };
         fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify(newUser)
+            body: JSON.stringify(userData)
         })
             .then(async (res) => {
                 const data = await res.json();

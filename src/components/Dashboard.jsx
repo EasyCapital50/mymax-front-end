@@ -50,6 +50,7 @@ function Dashboard({ onLogout }) {
       if (toDate) params.append('toDate', toDate);
       
       const selectedCompany = localStorage.getItem('selectedCompany');
+      if (selectedCompany) params.append('companyName', selectedCompany);
 
       const response = await fetch(`${API_URL}/records/get?${params.toString()}`, {
         headers: {
